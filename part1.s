@@ -42,7 +42,7 @@ CLEAR_SCREEN:
 	// We want to start from 0,0
 	MOV R0, #0 
 	MOV R1, #0 
-	MOV R3, LR 
+	MOV R2, #0
 
 	// Double loop to iterate all pixels over the screen 
 	X:
@@ -55,7 +55,8 @@ CLEAR_SCREEN:
 			CMP R1, #240
 			// If you dont hit it, keep looping 
 			BLT Y
-
+		
+		MOV R1, #1
 		// Move 1 pixel (iterate over screen)
 		ADD R0, #1
 		// Check if x hits pixel 320 
