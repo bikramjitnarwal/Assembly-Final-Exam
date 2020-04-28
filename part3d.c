@@ -30,77 +30,84 @@ volatile int* KEY_ptr = 0xFF20005C;
 volatile int* timers_address_base = 0xFF202000;
 volatile int* LED_ptr = 0xFF200000;
 
-
 char uoftcharacters[] = {U, space, o, f, space, t, space, E, C, E, hypen, two, four, three, space}; 
 
+// Reset the timer and then start it 
 void timer_reset_start(){
-	*(timers_address_base) = 0; // Reset TimeOut
+	*(timers_address_base) = 0; 
 	*(timers_address_base + 2) = add_delay & 0x0000FFFF;
 	*(timers_address_base + 3) = (add_delay & 0xFFFF0000) >> 16;
-	*(timers_address_base + 1) = 0b0100; // Start Timer
+	*(timers_address_base + 1) = 0b0100; 
+}
+
+void startProgram(){
+	*SEG_ptr_1 = 0;
+	*SEG_ptr_2 = 0;
+	
+	for (int k = 0; k < 6; k++){
+		int j = (i + 5 - k) % 15;
+
+		if (k < 4){
+			*SEG_ptr_1 = uoftcharacters[j] << 8*k | *SEG_ptr_1;
+		} else {
+			*SEG_ptr_2 = uoftcharacters[j] << 8*(k - 4) | *SEG_ptr_2;
+		}
+	}
+
+	if (forward_direction){
+		i = i - shift_index;
+	} else {
+		i = i + shift_index;
+	}
+	
+	if (shift_index > 0) {
+		add_delay = add_delay << shift_index;
+	} else if (shift_index < 0) {
+		add_delay = add_delay >> abs(shift_index);
+	}
+	
+	timer_reset_start();
+
+	while (1) {
+		if (*timers_address_base & 0b1 == 0b1) {
+			break;
+		}
+	}
+}
+
+void additional_features(){
+	if (*KEY_ptr == 0b1) {
+		begin = !begin;
+		*KEY_ptr = 0b1;
+	}
+	
+	if (*KEY_ptr == 0b10) {
+		if (shift_index > -16) {
+			shift_index--;
+		}
+		*KEY_ptr = 0b10;
+	}
+	
+	if (*KEY_ptr == 0b100) {
+		if (shift_index < 16) {
+			shift_index++;
+		}
+		*KEY_ptr = 0b100;
+	}
+	
+	if (*KEY_ptr == 0b1000) {
+		forward_direction = !forward_direction;
+		*KEY_ptr = 0b1000;
+	}
 }
 
 int main(void) {
 	while (1) {
         if (begin){	
-            *SEG_ptr_1 = 0;
-            *SEG_ptr_2 = 0;
-            
-			for (int k = 0; k < 6; k++){
-				int j = (i + 5 - k) % 15;
-
-				if (k < 4){
-					*SEG_ptr_1 = uoftcharacters[j] << 8*k | *SEG_ptr_1;
-				} else {
-					*SEG_ptr_2 = uoftcharacters[j] << 8*(k - 4) | *SEG_ptr_2;
-				}
-			}
-
-			if (forward_direction){
-				i = i - shift_index;
-			} else {
-				i = i + shift_index;
-			}
-			
-			if (shift_index > 0) {
-				add_delay = add_delay << shift_index;
-			} else if (shift_index < 0) {
-				add_delay = add_delay >> abs(shift_index);
-			}
-			
-			timer_reset_start();
-
-            while (1) {
-                if (*timers_address_base & 0b1 == 0b1) {
-                    break;
-                }
-            }
+			startProgram();
         }
 		
         *LED_ptr = *KEY_ptr;
-        
-        if (*KEY_ptr == 0b1) {
-            begin = !begin;
-            *KEY_ptr = 0b1;
-        }
-        
-		if (*KEY_ptr == 0b10) {
-            if (shift_index > -16) {
-                shift_index--;
-            }
-            *KEY_ptr = 0b10;
-        }
-		
-        if (*KEY_ptr == 0b100) {
-            if (shift_index < 16) {
-                shift_index++;
-            }
-            *KEY_ptr = 0b100;
-        }
-        
-		if (*KEY_ptr == 0b1000) {
-            forward_direction = !forward_direction;
-            *KEY_ptr = 0b1000;
-        }
+        additional_features();
     }
 }
