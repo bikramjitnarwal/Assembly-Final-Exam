@@ -1,65 +1,79 @@
 .global _start
-
-//Display a decimal digit on the HEX0 display
-
 _start: 	
 
+	
+/* For all keys:
 
-//load the value of key0 into the memory @ the address 0xFF200050
+- check their state by getting the first bit (which is the least
+signigicant bit) 
+- then call a seperate sub routine which displays this number
+- this display subroutine will: 
+     - check if key 2 is released
+	 - then get the value of the address
+	 - receive what to display and then store it in the memory of the hex 
+	 */
+// Once u get one key working you can just repeat code for other keys 
+// ------------------- CHECK STATES & Get first bit ---------------
+
+// For displaying 0
+
 KEY0:	LDR R1, =0xff200040
 		LDR R1, [R1]
-		
-//check the state of KEY0 by extracting the first bit (LSB)
+
 		AND R1, #0xf
 		CMP R1, #0
+		
 		BEQ DISPLAY_ZERO
+		
 		BNE KEY1
 		
+		
+// For displaying 1		
 KEY1:	LDR R1, =0xff200040
 		LDR R1, [R1]
 		
-//check the state of KEY0 by extracting the first bit (LSB)
 		AND R1, #0xf
 		CMP R1, #1
 		BEQ DISPLAY_ONE
 		BNE KEY2	
 		
+// For displaying 2
 KEY2:	LDR R1, =0xff200040
 		LDR R1, [R1]
 		
-//check the state of KEY0 by extracting the first bit (LSB)
 		AND R1, #0xf
 		CMP R1, #2
 		BEQ DISPLAY_TWO
 		BNE KEY3
 		
+// For displaying 3
 KEY3:	LDR R1, =0xff200040
 		LDR R1, [R1]
 		
-//check the state of KEY0 by extracting the first bit (LSB)
 		AND R1, #0xf
 		CMP R1, #3
 		BEQ DISPLAY_THREE
 		BNE KEY4		
 		
+// For displaying 4
 KEY4:	LDR R1, =0xff200040
 		LDR R1, [R1]
 		
-//check the state of KEY0 by extracting the first bit (LSB)
 		AND R1, #0xf
 		CMP R1, #4
 		BEQ DISPLAY_FOUR
 		BNE KEY5
 		
+// For displaying 5
 KEY5:	LDR R1, =0xff200040
 		LDR R1, [R1]
 		
-//check the state of KEY0 by extracting the first bit (LSB)
 		AND R1, #0xf
 		CMP R1, #5
 		BEQ DISPLAY_FIVE
 		BNE KEY0
 		
+// --------------------- DISPLAYING SECTION --------------------
 
 DISPLAY_ZERO:	
 			MOV R9, #ADDRESS //check if key 2 is released
