@@ -54,17 +54,7 @@ void startProgram(){
 		}
 	}
 
-	if (forward_direction){
-		i = i - shift_index;
-	} else {
-		i = i + shift_index;
-	}
-	
-	if (shift_index > 0) {
-		add_delay = add_delay << shift_index;
-	} else if (shift_index < 0) {
-		add_delay = add_delay >> abs(shift_index);
-	}
+	directions();
 	
 	timer_reset_start();
 
@@ -101,13 +91,26 @@ void additional_features(){
 	}
 }
 
+void directions(){
+	if (forward_direction){
+		i = i - shift_index;
+	} else {
+		i = i + shift_index;
+	}
+	
+	if (shift_index > 0) {
+		add_delay = add_delay << shift_index;
+	} else if (shift_index < 0) {
+		add_delay = add_delay >> abs(shift_index);
+	}
+}
+
 int main(void) {
 	while (1) {
         if (begin){	
 			startProgram();
         }
 		
-        *LED_ptr = *KEY_ptr;
-        additional_features();
+		additional_features();
     }
 }
