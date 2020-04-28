@@ -1,8 +1,7 @@
 .global _start
 _start: 	
 
-	
-/* For all keys:
+/* For every key (0-5):
 
 - check their state by getting the first bit (which is the least
 signigicant bit) 
@@ -26,7 +25,6 @@ ZEROTH_KEY:
 		BEQ DISPLAY_ZERO
 		
 		BNE FIRST_KEY
-		
 		
 // For displaying 1		
 FIRST_KEY:	
@@ -81,55 +79,78 @@ LOAD_ADDRESS:
 // --------------------- DISPLAYING SECTION --------------------
 
 DISPLAY_ZERO:	
-			MOV R9, #FIRST_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0xffffff00
 			ORR R8, #0x3f
 			STR R8, [R9]
 			B FIRST_KEY	
 
-
 DISPLAY_ONE:	
-			MOV R9, #FIRST_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0xffff00ff
 			ORR R8, #0x0600
 			STR R8, [R9]
 			B SECOND_KEY	
 			
 DISPLAY_TWO:	
-			MOV R9, #FIRST_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0xff00ffff
 			ORR R8, #0x5b0000
 			STR R8, [R9]
 			B THIRD_KEY	
 			
 DISPLAY_THREE:	
-			MOV R9, #FIRST_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0x00ffffff
 			ORR R8, #0x4f000000
 			STR R8, [R9]
 			B FOURTH_KEY
 			
 DISPLAY_FOUR:	
-			MOV R9, #SECOND_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #SECOND_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0xffffff00
 			ORR R8, #0x66
 			STR R8, [R9]
 			B FIFTH_KEY
 			
 DISPLAY_FIVE:	
-			MOV R9, #SECOND_ADDRESS //check if key 2 is released
-			LDR R9, [R9, #8] //we have the value of the address
-			LDR R8, [R9] //we have the contents of the display
+			// Firstly, check if key 2 is released 
+			MOV R9, #SECOND_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
 			AND R8, #0xffff00ff
 			ORR R8, #0x6d00
 			STR R8, [R9]
