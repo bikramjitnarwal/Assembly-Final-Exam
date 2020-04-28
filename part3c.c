@@ -22,19 +22,19 @@ bool start = true;
 volatile int* SEG_ptr1 = 0xFF200020;
 volatile int* SEG_ptr2 = 0xFF200030;
 volatile int* KEY_ptr = 0xFF20005C;
-volatile int* timer_base = 0xFF202000;
+volatile int* timers_address_base = 0xFF202000;
 
 // Array with appropriate characters 
 // I made the array like this because it was way easier to debug my code 
-char Seg7_Data[] = {U, space, o, f, space, t, space, E, C, E, hypen, two, four, three, space}; 
+char uoftcharacters[] = {U, space, o, f, space, t, space, E, C, E, hypen, two, four, three, space}; 
 
 void timer_reset_start(){
 	// Reset TimeOut
-	*(timer_base) = 0; 
-	*(timer_base + 2) = 0xF080;
-	*(timer_base + 3) = 0x2FA;
+	*(timers_address_base) = 0; 
+	*(timers_address_base + 2) = 0xF080;
+	*(timers_address_base + 3) = 0x2FA;
 	// Being timer
-	*(timer_base + 1) = 0b0100; 
+	*(timers_address_base + 1) = 0b0100; 
 }
 
 void startProgram(){
@@ -45,9 +45,9 @@ void startProgram(){
 		int j = (i + 5 - k) % 15;
 
 		if (k < 4){
-			*SEG_ptr1 = Seg7_Data[j] << 8*k | *SEG_ptr1;
+			*SEG_ptr1 = uoftcharacters[j] << 8*k | *SEG_ptr1;
 		} else {
-			*SEG_ptr2 = Seg7_Data[j] << 8*(k - 4) | *SEG_ptr2;
+			*SEG_ptr2 = uoftcharacters[j] << 8*(k - 4) | *SEG_ptr2;
 		}
 	}
 	
@@ -57,7 +57,7 @@ void startProgram(){
 
 	while (1){
 		// Prevent Compiler Optimization
-		if (*timer_base & 0b1 == 0b1){
+		if (*timers_address_base & 0b1 == 0b1){
 			break;
 		}
 	}
@@ -74,3 +74,4 @@ int main(void) {
         }
     }
 }
+
