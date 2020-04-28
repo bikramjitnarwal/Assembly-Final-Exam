@@ -9,8 +9,8 @@ volatile int *HEX_ptr1 = (int *) (0xFF200030);
 
 // Variables to be used
 bool isItON = true;
-// We will use 1000000 to help set a delay, Looping from 0 to delayNum
-int delayNum = 1000000;
+// We will use 600000 to help set a delay, Looping from 0 to delayNum
+int delayNum = 600000;
 
 // Each digit from total hex: 101243
 int hex_0 = 3;
@@ -20,12 +20,13 @@ int hex_3 = 1;
 int hex_4 = 0;
 int hex_5 = 1;
 
-// Create character arrays for HEX3-0 and HEX5-4 display
-unsigned char HEX_segs[] = {0, 0, 0};
-unsigned char HEX_segs1[] = {0, 0};
+// Create character array for HEX3-0 
+char HEX_segs[] = {0, 0, 0};
+// Create character array for HEX5-4 
+char HEX_segs_1[] = {0, 0};
 
-unsigned char newHEX[] = {0x00, 0x00, 0x00, 0x00};
-unsigned char newHEX1[] = {0x00, 0x00};
+char HexPrime[] = {0x00, 0x00, 0x00, 0x00};
+char HexPrime1[] = {0x00, 0x00};
 
 void display_3(){
 	if(hex_0 == 0){
@@ -82,33 +83,31 @@ void display_secondE(){
 
 void display_C(){
 	if(hex_4 == 0)
-		HEX_segs1[0] = 0x39;
+		HEX_segs_1[0] = 0x39;
 	else if(hex_4 == 1)
-		HEX_segs1[0] = 0x79;
+		HEX_segs_1[0] = 0x79;
 	else if(hex_4 == 2)
-		HEX_segs1[0] = 0x5B; 
+		HEX_segs_1[0] = 0x5B; 
 	else if(hex_4 == 3)
-		HEX_segs1[0] = 0x4F; 
+		HEX_segs_1[0] = 0x4F; 
 	else if(hex_4 == 4)
-		HEX_segs1[0] = 0x66;
+		HEX_segs_1[0] = 0x66;
 }
 
 void display_firstE(){
 	if(hex_5 == 0)
-		HEX_segs1[1] = 0x39;
+		HEX_segs_1[1] = 0x39;
 	else if(hex_5 == 1)
-		HEX_segs1[1] = 0x79;
+		HEX_segs_1[1] = 0x79;
 	else if(hex_5 == 2)
-		HEX_segs1[1] = 0x5B; 
+		HEX_segs_1[1] = 0x5B; 
 	else if(hex_5 == 3)
-		HEX_segs1[1] = 0x4F; 
+		HEX_segs_1[1] = 0x4F; 
 	else if(hex_5 == 4)
-		HEX_segs1[1] = 0x66;
+		HEX_segs_1[1] = 0x66;
 }
 
-void turn_ON(){
-	// assign the values for HEX display
-	
+void turn_ON(){	
 	display_3();
 
 	display_4();
@@ -124,18 +123,22 @@ void turn_ON(){
 	*HEX_ptr =  *(int *)(HEX_segs);
 	*HEX_ptr1 = *(int *)(HEX_segs1);
 
+	// Big delay inbetween flash 
 	for (int i = 0; i < delayNum; i++) {
 	}
-
+	// Flip the on condition now 
 	isItON = false;
 }
 
 
 void turn_OFF(){
-	*HEX_ptr =  *(int *)(newHEX);
-	*HEX_ptr1 = *(int *)(newHEX1);
+	*HEX_ptr =  *(int *)(HexPrime);
+	*HEX_ptr1 = *(int *)(HexPrime1);
+		
+	// Big delay inbetween flash 
 	for (int i = 0; i < delayNum; i++) {
 	}
+	// Flip the on condition now 
 	isItON = true;
 }
 
