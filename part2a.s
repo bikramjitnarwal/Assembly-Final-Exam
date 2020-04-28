@@ -17,8 +17,8 @@ signigicant bit)
 
 // For displaying 0
 
-KEY0:	LDR R1, =0xff200040
-		LDR R1, [R1]
+KEY0:	
+		BL LOAD_ADDRESS
 
 		AND R1, #0xf
 		CMP R1, #0
@@ -29,8 +29,8 @@ KEY0:	LDR R1, =0xff200040
 		
 		
 // For displaying 1		
-KEY1:	LDR R1, =0xff200040
-		LDR R1, [R1]
+KEY1:	
+		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #1
@@ -38,8 +38,8 @@ KEY1:	LDR R1, =0xff200040
 		BNE KEY2	
 		
 // For displaying 2
-KEY2:	LDR R1, =0xff200040
-		LDR R1, [R1]
+KEY2:	
+		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #2
@@ -47,8 +47,8 @@ KEY2:	LDR R1, =0xff200040
 		BNE KEY3
 		
 // For displaying 3
-KEY3:	LDR R1, =0xff200040
-		LDR R1, [R1]
+KEY3:	
+		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #3
@@ -56,27 +56,32 @@ KEY3:	LDR R1, =0xff200040
 		BNE KEY4		
 		
 // For displaying 4
-KEY4:	LDR R1, =0xff200040
-		LDR R1, [R1]
-		
+KEY4:	
+		BL LOAD_ADDRESS
+
 		AND R1, #0xf
 		CMP R1, #4
 		BEQ DISPLAY_FOUR
 		BNE KEY5
 		
 // For displaying 5
-KEY5:	LDR R1, =0xff200040
-		LDR R1, [R1]
+KEY5:	
+		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #5
 		BEQ DISPLAY_FIVE
 		BNE KEY0
 		
+LOAD_ADDRESS:
+		LDR R1, =0xff200040
+		LDR R1, [R1]
+		MOV PC, LR 
+		
 // --------------------- DISPLAYING SECTION --------------------
 
 DISPLAY_ZERO:	
-			MOV R9, #ADDRESS //check if key 2 is released
+			MOV R9, #FIRST_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0xffffff00
@@ -86,7 +91,7 @@ DISPLAY_ZERO:
 
 
 DISPLAY_ONE:	
-			MOV R9, #ADDRESS //check if key 2 is released
+			MOV R9, #FIRST_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0xffff00ff
@@ -95,7 +100,7 @@ DISPLAY_ONE:
 			B KEY2	
 			
 DISPLAY_TWO:	
-			MOV R9, #ADDRESS //check if key 2 is released
+			MOV R9, #FIRST_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0xff00ffff
@@ -104,7 +109,7 @@ DISPLAY_TWO:
 			B KEY3	
 			
 DISPLAY_THREE:	
-			MOV R9, #ADDRESS //check if key 2 is released
+			MOV R9, #FIRST_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0x00ffffff
@@ -113,7 +118,7 @@ DISPLAY_THREE:
 			B KEY4
 			
 DISPLAY_FOUR:	
-			MOV R9, #ADDR2 //check if key 2 is released
+			MOV R9, #SECOND_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0xffffff00
@@ -122,7 +127,7 @@ DISPLAY_FOUR:
 			B KEY5
 			
 DISPLAY_FIVE:	
-			MOV R9, #ADDR2 //check if key 2 is released
+			MOV R9, #SECOND_ADDRESS //check if key 2 is released
 			LDR R9, [R9, #8] //we have the value of the address
 			LDR R8, [R9] //we have the contents of the display
 			AND R8, #0xffff00ff
@@ -130,13 +135,5 @@ DISPLAY_FIVE:
 			STR R8, [R9]
 			B KEY0
 
-//HEX0 - 3 0xFF200020
-//HEX4 - 5 0xFF200030
-//KEY0 - 3 0xFF200050
-
-ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200020
-ADDR2: .word 0xFF200020, 0xFF200030, 0xFF200030
-//6 - 0   HEX0
-//14 - 8  HEX1
-//22 - 16 HEX2
-//30 - 24 HEX3
+FIRST_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200020
+SECOND_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200030
