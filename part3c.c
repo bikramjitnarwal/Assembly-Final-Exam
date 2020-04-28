@@ -1,80 +1,76 @@
-// libraries included to use bool
 #include <stdio.h>
 #include <stdbool.h>
 
-const int get_index(const int index)
-{
-    return index % 15;
+// All binary values for "U of t ECE-243"
+#define U 0b0111110
+#define space 0b0000000
+#define o 0b1011100
+#define f 0b1110001
+#define t 0b1111000
+#define E 0b1111001
+#define C 0b0111001
+#define hypen 0b1000000
+#define two 0b1011011
+#define four 0b1100110
+#define three 0b1001111
+
+// Global variables
+int i = 0;
+bool start = true;
+ 
+// All address values allocated to variables 
+volatile int* SEG_ptr1 = 0xFF200020;
+volatile int* SEG_ptr2 = 0xFF200030;
+volatile int* KEY_ptr = 0xFF20005C;
+volatile int* timer_base = 0xFF202000;
+
+// Array with appropriate characters 
+// I made the array like this because it was way easier to debug my code 
+char Seg7_Data[] = {U, space, o, f, space, t, space, E, C, E, hypen, two, four, three, space}; 
+
+void timer_reset_start(){
+	// Reset TimeOut
+	*(timer_base) = 0; 
+	*(timer_base + 2) = 0xF080;
+	*(timer_base + 3) = 0x2FA;
+	// Being timer
+	*(timer_base + 1) = 0b0100; 
+}
+
+void startProgram(){
+	*SEG_ptr1 = 0;
+	*SEG_ptr2 = 0;
+	
+	for (int k = 0; k < 6; k++){
+		int j = (i + 5 - k) % 15;
+
+		if (k < 4){
+			*SEG_ptr1 = Seg7_Data[j] << 8*k | *SEG_ptr1;
+		} else {
+			*SEG_ptr2 = Seg7_Data[j] << 8*(k - 4) | *SEG_ptr2;
+		}
+	}
+	
+	i = i + 1;
+	
+	timer_reset_start();
+
+	while (1){
+		// Prevent Compiler Optimization
+		if (*timer_base & 0b1 == 0b1){
+			break;
+		}
+	}
 }
 
 int main(void) {
-
-    volatile int* SEG_ptr1 = 0xFF200020;
-    volatile int* SEG_ptr2 = 0xFF200030;
-    volatile int* KEY_ptr = 0xFF20005C;
-    volatile int* timer_base = 0xFF202000;
-
-    const char Seg7_Data[] = {0b0111110, // U
-                              0b0000000,
-                              0b1011100, // o
-                              0b1110001, // f
-                              0b0000000,
-                              0b1111000, // t
-                              0b0000000,
-                              0b1111001, // E
-                              0b0111001, // C
-                              0b1111001, // E
-                              0b1000000, // -
-                              0b1011011, // 2
-                              0b1100110, // 4
-                              0b1001111, // 3
-                              0b0000000};
-
-    int index = 0;
-
-    // initializes count to show where to display the led
-    bool run = true;
-
     while (1) {
-
-        if (run)
-        {	
-            *SEG_ptr1 = 0;
-            *SEG_ptr2 = 0;
-            
-            for (int seg_no = 0; seg_no < 6; seg_no++)
-            {
-                int actual_index = get_index(index + 5 - seg_no);
-
-                if (seg_no < 4)
-                {
-                    *SEG_ptr1 = Seg7_Data[actual_index] << 8*seg_no | *SEG_ptr1;
-                }
-                else
-                {
-                    *SEG_ptr2 = Seg7_Data[actual_index] << 8*(seg_no - 4) | *SEG_ptr2;
-                }
-            }
-            
-            index++;
-            *(timer_base) = 0; // Reset TimeOut
-            *(timer_base + 2) = 0xF080;
-            *(timer_base + 3) = 0x2FA;
-            *(timer_base + 1) = 0b0100; // Start Timer
-
-            while (1)
-            {
-                if (*timer_base & 0b1 == 0b1) // Prevent Compiler Optimization
-                {
-                    break;
-                }
-            }
+        if (start){	
+			startProgram();
         }
         
-        if (*KEY_ptr != 0b0000)
-        {
-            run = !run;
-            *KEY_ptr = *KEY_ptr;
+        if (*KEY_ptr != 0b0000){
+            start = false;
         }
     }
 }
