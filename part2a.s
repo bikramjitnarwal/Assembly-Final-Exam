@@ -17,7 +17,7 @@ signigicant bit)
 
 // For displaying 0
 
-KEY0:	
+ZEROTH_KEY:	
 		BL LOAD_ADDRESS
 
 		AND R1, #0xf
@@ -25,53 +25,53 @@ KEY0:
 		
 		BEQ DISPLAY_ZERO
 		
-		BNE KEY1
+		BNE FIRST_KEY
 		
 		
 // For displaying 1		
-KEY1:	
+FIRST_KEY:	
 		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #1
 		BEQ DISPLAY_ONE
-		BNE KEY2	
+		BNE SECOND_KEY	
 		
 // For displaying 2
-KEY2:	
+SECOND_KEY:	
 		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #2
 		BEQ DISPLAY_TWO
-		BNE KEY3
+		BNE THIRD_KEY
 		
 // For displaying 3
-KEY3:	
+THIRD_KEY:	
 		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #3
 		BEQ DISPLAY_THREE
-		BNE KEY4		
+		BNE FOURTH_KEY		
 		
 // For displaying 4
-KEY4:	
+FOURTH_KEY:	
 		BL LOAD_ADDRESS
 
 		AND R1, #0xf
 		CMP R1, #4
 		BEQ DISPLAY_FOUR
-		BNE KEY5
+		BNE FIFTH_KEY
 		
 // For displaying 5
-KEY5:	
+FIFTH_KEY:	
 		BL LOAD_ADDRESS
 		
 		AND R1, #0xf
 		CMP R1, #5
 		BEQ DISPLAY_FIVE
-		BNE KEY0
+		BNE ZEROTH_KEY
 		
 LOAD_ADDRESS:
 		LDR R1, =0xff200040
@@ -87,7 +87,7 @@ DISPLAY_ZERO:
 			AND R8, #0xffffff00
 			ORR R8, #0x3f
 			STR R8, [R9]
-			B KEY1	
+			B FIRST_KEY	
 
 
 DISPLAY_ONE:	
@@ -97,7 +97,7 @@ DISPLAY_ONE:
 			AND R8, #0xffff00ff
 			ORR R8, #0x0600
 			STR R8, [R9]
-			B KEY2	
+			B SECOND_KEY	
 			
 DISPLAY_TWO:	
 			MOV R9, #FIRST_ADDRESS //check if key 2 is released
@@ -106,7 +106,7 @@ DISPLAY_TWO:
 			AND R8, #0xff00ffff
 			ORR R8, #0x5b0000
 			STR R8, [R9]
-			B KEY3	
+			B THIRD_KEY	
 			
 DISPLAY_THREE:	
 			MOV R9, #FIRST_ADDRESS //check if key 2 is released
@@ -115,7 +115,7 @@ DISPLAY_THREE:
 			AND R8, #0x00ffffff
 			ORR R8, #0x4f000000
 			STR R8, [R9]
-			B KEY4
+			B FOURTH_KEY
 			
 DISPLAY_FOUR:	
 			MOV R9, #SECOND_ADDRESS //check if key 2 is released
@@ -124,7 +124,7 @@ DISPLAY_FOUR:
 			AND R8, #0xffffff00
 			ORR R8, #0x66
 			STR R8, [R9]
-			B KEY5
+			B FIFTH_KEY
 			
 DISPLAY_FIVE:	
 			MOV R9, #SECOND_ADDRESS //check if key 2 is released
@@ -133,7 +133,7 @@ DISPLAY_FIVE:
 			AND R8, #0xffff00ff
 			ORR R8, #0x6d00
 			STR R8, [R9]
-			B KEY0
+			B ZEROTH_KEY
 
 FIRST_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200020
 SECOND_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200030
