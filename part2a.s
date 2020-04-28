@@ -79,7 +79,8 @@ LOAD_ADDRESS:
 // --------------------- DISPLAYING SECTION --------------------
 
 DISPLAY_ZERO:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #FIRST_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
@@ -92,7 +93,8 @@ DISPLAY_ZERO:
 			B FIRST_KEY	
 
 DISPLAY_ONE:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #FIRST_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
@@ -105,7 +107,8 @@ DISPLAY_ONE:
 			B SECOND_KEY	
 			
 DISPLAY_TWO:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #FIRST_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
@@ -118,7 +121,8 @@ DISPLAY_TWO:
 			B THIRD_KEY	
 			
 DISPLAY_THREE:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #FIRST_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
@@ -131,7 +135,8 @@ DISPLAY_THREE:
 			B FOURTH_KEY
 			
 DISPLAY_FOUR:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #SECOND_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
@@ -144,7 +149,8 @@ DISPLAY_FOUR:
 			B FIFTH_KEY
 			
 DISPLAY_FIVE:	
-			// Firstly, check if key 2 is released 
+			// Check: is key 2 is released 
+			// Get address from table 
 			MOV R9, #SECOND_ADDRESS 
 			// Load the value of the address
 			LDR R9, [R9, #8] 
