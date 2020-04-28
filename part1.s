@@ -37,28 +37,35 @@ PLOT_PIXEL:
 
 // Question 1(c)
 
-// We want to start from 0,0
-MOV R0, #0 
-MOV R1, #0 
-MOV R3, LR 
+CLEAR_SCREEN:
+	PUSH {R0-R3, LR}
+	// We want to start from 0,0
+	MOV R0, #0 
+	MOV R1, #0 
+	MOV R3, LR 
 
-X:
-	Y: 
-		BL PLOT_PIXEL
+	// Double loop to iterate all pixels over the screen 
+	X:
+		Y: 
+			BL PLOT_PIXEL
+			
+			// Move 1 pixel (iterate over screen) 
+			ADD R1, #1
+			// Check if you hit the pixel 240 
+			CMP R1, #240
+			// If you dont hit it, keep looping 
+			BLT Y
 
-		// Check if you hit the pixel 240 
-		CMP R1, #240
-		// If you dont hit pixel 240, move 1 
-		ADD R1, #1
-		// And keep looping
-		BLT Y
+		// Move 1 pixel (iterate over screen)
+		ADD R0, #1
+		// Check if x hits pixel 320 
+		CMP R0, #320
+		// If you dont hit it, keep looping 
+		BLT X
+
+	POP {R0-R3, LR}
+	MOV PC, LR 
 	
-	// Check if x hits pixel 320 
-	CMP R0, #320
-	// If you dont hit pixel 320, move 1 
-	ADD R0, #1
-	// And keep looping
-	BLT X
-
-MOV PC, LR 
+// Question 1(d)
+DRAW_LINE:
 	
