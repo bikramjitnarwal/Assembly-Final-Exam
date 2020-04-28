@@ -17,58 +17,85 @@ signigicant bit)
 // For displaying 0
 
 ZEROTH_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 0
 		CMP R1, #0
-		
+		// If it is, we can branch to display it right away 
 		BEQ DISPLAY_ZERO
-		
+		// Otherwise, branch to next key 
 		BNE FIRST_KEY
 		
 // For displaying 1		
 FIRST_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 		
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 1
 		CMP R1, #1
 		BEQ DISPLAY_ONE
+		// Otherwise, branch to next key
 		BNE SECOND_KEY	
 		
 // For displaying 2
 SECOND_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 		
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 2
 		CMP R1, #2
+		// If it is, we can branch to display it right away
 		BEQ DISPLAY_TWO
+		// Otherwise, branch to next key
 		BNE THIRD_KEY
 		
 // For displaying 3
 THIRD_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 		
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 3
 		CMP R1, #3
+		// If it is, we can branch to display it right away
 		BEQ DISPLAY_THREE
+		// Otherwise, branch to next key
 		BNE FOURTH_KEY		
 		
 // For displaying 4
 FOURTH_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 4
 		CMP R1, #4
+		// If it is, we can branch to display it right away
 		BEQ DISPLAY_FOUR
+		// Otherwise, branch to next key
 		BNE FIFTH_KEY
 		
 // For displaying 5
 FIFTH_KEY:	
+		// Before anything, load the address
 		BL LOAD_ADDRESS
 		
+		// AND the contents of R1 and the address #0xf
 		AND R1, #0xf
+		// Check if this is = to 5
 		CMP R1, #5
+		// If it is, we can branch to display it right away
 		BEQ DISPLAY_FIVE
+		// Otherwise, branch to next key
 		BNE ZEROTH_KEY
 		
 LOAD_ADDRESS:
