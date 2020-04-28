@@ -33,7 +33,8 @@ PLOT_PIXEL:
 	ADD R3, R0
 	STR R2, [R3]
 	MOV PC, LR
-
+END:
+	B END
 
 // Question 1(c)
 
@@ -70,3 +71,59 @@ CLEAR_SCREEN:
 // Question 1(d)
 DRAW_LINE:
 	
+
+// Question 1(e)
+
+MAIN: 	
+	
+	MOV R0, #0
+	MOV R1, #0
+	LDR R2, =0x0000
+	BL CLEAR_SCREEN	
+	B END
+	
+PLOT_PIXEL:
+	// We want the back buffer, so add 4 
+	// R3 = BACK BUFFER
+	LDR R3, [R12, #4]
+	// Shift y coordinate: (y << 10) & x coordinate: (x << 1)
+	LSL R1, #10
+	LSL R0, #1
+	// Now add the shifted y and x coodinates then store it in back buffer
+	ADD R3, R1
+	ADD R3, R0
+	STR R2, [R3]
+	MOV PC, LR
+END:
+	B END
+	
+CLEAR_SCREEN:
+	PUSH {R0-R3, LR}
+	// We want to start from 0,0
+	MOV R0, #0 
+	MOV R1, #0 
+	MOV R2, #0
+
+	// Double loop to iterate all pixels over the screen 
+	X:
+		Y: 
+			BL PLOT_PIXEL
+			
+			// Move 1 pixel (iterate over screen) 
+			ADD R1, #1
+			// Check if you hit the pixel 240 
+			CMP R1, #240
+			// If you dont hit it, keep looping 
+			BLT Y
+		
+		MOV R1, #1
+		// Move 1 pixel (iterate over screen)
+		ADD R0, #1
+		// Check if x hits pixel 320 
+		CMP R0, #320
+		// If you dont hit it, keep looping 
+		BLT X
+
+	POP {R0-R3, LR}
+	MOV PC, LR 
+
