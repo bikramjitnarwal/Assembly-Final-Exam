@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Global variables: Because they will be used everywhere no matter which function it is 
 // ADDRESS FOR KEY
 volatile int *KEY = (int*)0xFF20005C;
 // ADDRESS FOR LED
