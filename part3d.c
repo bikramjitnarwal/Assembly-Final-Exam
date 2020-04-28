@@ -1,125 +1,105 @@
-// libraries included to use bool
 #include <stdio.h>
 #include <stdbool.h>
 
-const int get_index(const int index)
-{
-    return index % 15;
+// All binary values for "U of t ECE-243"
+#define U 0b0111110
+#define space 0b0000000
+#define o 0b1011100
+#define f 0b1110001
+#define t 0b1111000
+#define E 0b1111001
+#define C 0b0111001
+#define hypen 0b1000000
+#define two 0b1011011
+#define four 0b1100110
+#define three 0b1001111
+
+// Global variables
+int counter = 0;
+int i = 0;
+int shift_index = 0;
+int add_delay = 0x2FAF080;
+bool start = true;
+bool begin = true;
+bool forward_direction = true;
+ 
+// All address values allocated to variables 
+volatile int* SEG_ptr_1 = 0xFF200020;
+volatile int* SEG_ptr_2 = 0xFF200030;
+volatile int* KEY_ptr = 0xFF20005C;
+volatile int* timers_address_base = 0xFF202000;
+volatile int* LED_ptr = 0xFF200000;
+
+
+char uoftcharacters[] = {U, space, o, f, space, t, space, E, C, E, hypen, two, four, three, space}; 
+
+void timer_reset_start(){
+	*(timers_address_base) = 0; // Reset TimeOut
+	*(timers_address_base + 2) = add_delay & 0x0000FFFF;
+	*(timers_address_base + 3) = (add_delay & 0xFFFF0000) >> 16;
+	*(timers_address_base + 1) = 0b0100; // Start Timer
 }
 
 int main(void) {
-
-    // sets address for leds
-    volatile int* SEG_ptr1 = 0xFF200020;
-    volatile int* SEG_ptr2 = 0xFF200030;
-    volatile int* KEY_ptr = 0xFF20005C;
-    volatile int* timer_base = 0xFF202000;
-
-    const char Seg7_Data[] = {0b0111110, // U
-                              0b0000000,
-                              0b1011100, // o
-                              0b1110001, // f
-                              0b0000000,
-                              0b1111000, // t
-                              0b0000000,
-                              0b1111001, // E
-                              0b0111001, // C
-                              0b1111001, // E
-                              0b1000000, // -
-                              0b1011011, // 2
-                              0b1100110, // 4
-                              0b1001111, // 3
-                              0b0000000};
-
-    int index = 0;
-    int count = 0;
-    int shifts = 0;
-
-    // initializes count to show where to display the led
-    bool run = true;
-    bool fwd = true;
-
-    while (1) {
-
-        if (run)
-        {	
-            *SEG_ptr1 = 0;
-            *SEG_ptr2 = 0;
+	while (1) {
+        if (begin){	
+            *SEG_ptr_1 = 0;
+            *SEG_ptr_2 = 0;
             
-            for (int seg_no = 0; seg_no < 6; seg_no++)
-            {
-                int actual_index = get_index(index + 5-seg_no);
+			for (int k = 0; k < 6; k++){
+				int j = (i + 5 - k) % 15;
 
-                if (seg_no <= 3)
-                {
-                    *SEG_ptr1 = Seg7_Data[actual_index] << 8*seg_no | *SEG_ptr1;
-                }
-                else
-                {
-                    *SEG_ptr2 = Seg7_Data[actual_index] << 8*(seg_no-4) | *SEG_ptr2;
-                }
-            }
-
-			if (fwd)
-			{
-				index = index - shifts;
+				if (k < 4){
+					*SEG_ptr_1 = uoftcharacters[j] << 8*k | *SEG_ptr_1;
+				} else {
+					*SEG_ptr_2 = uoftcharacters[j] << 8*(k - 4) | *SEG_ptr_2;
+				}
 			}
-			else
-			{
-				index = index + shifts;
+
+			if (forward_direction){
+				i = i - shift_index;
+			} else {
+				i = i + shift_index;
 			}
 			
-			int delay = 0x2FAF080;
-			if (shifts > 0)
-			{
-				delay = delay << shifts;
-			}
-			else if (shifts < 0)
-			{
-				delay = delay >> abs(shifts);
+			if (shift_index > 0) {
+				add_delay = add_delay << shift_index;
+			} else if (shift_index < 0) {
+				add_delay = add_delay >> abs(shift_index);
 			}
 			
-            *(timer_base) = 0; // Reset TimeOut
-            *(timer_base + 2) = delay & 0x0000FFFF;
-            *(timer_base + 3) = (delay & 0xFFFF0000) >> 16;
-            *(timer_base + 1) = 0b0100; // Start Timer
+			timer_reset_start();
 
-            while (1)
-            {
-                if (*timer_base & 0b1 == 0b1) // Prevent Compiler Optimization
-                {
+            while (1) {
+                if (*timers_address_base & 0b1 == 0b1) {
                     break;
                 }
             }
         }
-        volatile int* LED_ptr = 0xFF200000;
-
+		
         *LED_ptr = *KEY_ptr;
         
-        if (*KEY_ptr == 0b1)
-        {
-            run = !run;
+        if (*KEY_ptr == 0b1) {
+            begin = !begin;
             *KEY_ptr = 0b1;
         }
-        if (*KEY_ptr == 0b10)
-        {
-            if (shifts > -16)
-            {
-                shifts--;
+        
+		if (*KEY_ptr == 0b10) {
+            if (shift_index > -16) {
+                shift_index--;
             }
             *KEY_ptr = 0b10;
         }
-        if (*KEY_ptr == 0b100)
-        {
-            if (shifts < 16)
-            {
-                shifts++;
+		
+        if (*KEY_ptr == 0b100) {
+            if (shift_index < 16) {
+                shift_index++;
             }
             *KEY_ptr = 0b100;
         }
-        if (*KEY_ptr == 0b1000)
-        {
-            fwd = !fwd;
+        
+		if (*KEY_ptr == 0b1000) {
+            forward_direction = !forward_direction;
             *KEY_ptr = 0b1000;
         }
     }
