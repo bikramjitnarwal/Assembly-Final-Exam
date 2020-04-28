@@ -1,20 +1,35 @@
 .global _start
 _start:
+
+// *******MESSAGE TO TA*********
+/*
+I dont want to waste your time, this program does not work together
+but some parts like do work individually. I am going for part marks. 
+Thanks and have a good day.
+*/
 	
 // Question 1(a)
 WAIT_FOR_VSYNC:
+	// Push onto stack to prevent clobbered registers 
 	PUSH {R0-R3, LR}
+	// Get address of VGA controller 
 	LDR R12, =0xFF203020
 	MOV R0, #1
+	// Get address of status register 
 	LDR R1, =0xFF20302C
+	// Set a 1 into the register containing the controller 
 	STR R0, [R12]
 	
 LOOP:
+	// Load status register 
 	LDR R1,=0xFF20302C
+	// Check is R1 = 0, is so keep looping until it isnt 
 	CMP R1, #0
 	BEQ LOOP
 	
+	// We can finally pop since we are done this subroutine 
 	POP {R0-R3, LR}
+	// Return 
 	MOV PC, LR
 	
 END: 
@@ -31,7 +46,9 @@ PLOT_PIXEL:
 	// Now add the shifted y and x coodinates then store it in back buffer
 	ADD R3, R1
 	ADD R3, R0
+	// Store it 
 	STR R2, [R3]
+	// Return 
 	MOV PC, LR
 END:
 	B END
@@ -39,6 +56,7 @@ END:
 // Question 1(c)
 
 CLEAR_SCREEN:
+	// Push onto stack to prevent clobbered registers 
 	PUSH {R0-R3, LR}
 	// We want to start from 0,0
 	MOV R0, #0 
@@ -46,8 +64,17 @@ CLEAR_SCREEN:
 	MOV R2, #0
 
 	// Double loop to iterate all pixels over the screen 
+	/*
+	for(int .....){
+		for(int ....){
+		
+	This is the general technique still in assembly but using 
+	subroutines basically 
+	*/
+	
 	X:
 		Y: 
+			// Plot pixel to help clear screen at that coordinate
 			BL PLOT_PIXEL
 			
 			// Move 1 pixel (iterate over screen) 
@@ -65,15 +92,18 @@ CLEAR_SCREEN:
 		// If you dont hit it, keep looping 
 		BLT X
 
+	// We can finally pop since we are done this subroutine 
 	POP {R0-R3, LR}
 	MOV PC, LR 
 	
 // Question 1(d)
 DRAW_LINE:
+// Confused on this part for now 
 	
 
 // Question 1(e)
 
+// Combination of all parts 
 MAIN: 	
 	
 	MOV R0, #0
@@ -126,4 +156,3 @@ CLEAR_SCREEN:
 
 	POP {R0-R3, LR}
 	MOV PC, LR 
-
