@@ -2,7 +2,6 @@
 _start: 	
 
 /* For every key (0-5):
-
 - check their state by getting the first bit (which is the least
 signigicant bit) 
 - then call a seperate sub routine which displays this number
@@ -12,6 +11,93 @@ signigicant bit)
 	 - receive what to display and then store it in the memory of the hex 
 	 */
 // Once u get one key working you can just repeat code for other keys 
+
+// --------------------- DISPLAYING SECTION --------------------
+
+DISPLAY_ZERO:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0xffffff00
+			ORR R8, #0x3f
+			STR R8, [R9]
+			B FIRST_KEY	
+
+DISPLAY_ONE:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0xffff00ff
+			ORR R8, #0x0600
+			STR R8, [R9]
+			B SECOND_KEY	
+			
+DISPLAY_TWO:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0xff00ffff
+			ORR R8, #0x5b0000
+			STR R8, [R9]
+			B THIRD_KEY	
+			
+DISPLAY_THREE:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #FIRST_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0x00ffffff
+			ORR R8, #0x4f000000
+			STR R8, [R9]
+			B FOURTH_KEY
+			
+DISPLAY_FOUR:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #SECOND_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0xffffff00
+			ORR R8, #0x66
+			STR R8, [R9]
+			B FIFTH_KEY
+			
+DISPLAY_FIVE:	
+			// Check: is key 2 is released 
+			// Get address from table 
+			MOV R9, #SECOND_ADDRESS 
+			// Load the value of the address
+			LDR R9, [R9, #8] 
+			// Load contents that we wish to display 
+			LDR R8, [R9] 
+			// Get the according hex and store it then 
+			AND R8, #0xffff00ff
+			ORR R8, #0x6d00
+			STR R8, [R9]
+			B ZEROTH_KEY
+
 // ------------------- CHECK STATES & Get first bit ---------------
 
 // For displaying 0
@@ -102,92 +188,6 @@ LOAD_ADDRESS:
 		LDR R1, =0xff200040
 		LDR R1, [R1]
 		MOV PC, LR 
-		
-// --------------------- DISPLAYING SECTION --------------------
-
-DISPLAY_ZERO:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #FIRST_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0xffffff00
-			ORR R8, #0x3f
-			STR R8, [R9]
-			B FIRST_KEY	
-
-DISPLAY_ONE:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #FIRST_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0xffff00ff
-			ORR R8, #0x0600
-			STR R8, [R9]
-			B SECOND_KEY	
-			
-DISPLAY_TWO:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #FIRST_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0xff00ffff
-			ORR R8, #0x5b0000
-			STR R8, [R9]
-			B THIRD_KEY	
-			
-DISPLAY_THREE:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #FIRST_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0x00ffffff
-			ORR R8, #0x4f000000
-			STR R8, [R9]
-			B FOURTH_KEY
-			
-DISPLAY_FOUR:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #SECOND_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0xffffff00
-			ORR R8, #0x66
-			STR R8, [R9]
-			B FIFTH_KEY
-			
-DISPLAY_FIVE:	
-			// Check: is key 2 is released 
-			// Get address from table 
-			MOV R9, #SECOND_ADDRESS 
-			// Load the value of the address
-			LDR R9, [R9, #8] 
-			// Load contents that we wish to display 
-			LDR R8, [R9] 
-			// Get the according hex and store it then 
-			AND R8, #0xffff00ff
-			ORR R8, #0x6d00
-			STR R8, [R9]
-			B ZEROTH_KEY
 
 FIRST_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200020
 SECOND_ADDRESS: .word 0xFF200020, 0xFF200030, 0xFF200030
