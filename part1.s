@@ -1,12 +1,5 @@
 .global _start
 _start:
-
-// *******MESSAGE TO TA*********
-/*
-I dont want to waste your time, this program does not work together
-but some parts like do work individually. I am going for part marks. 
-Thanks and have a good day.
-*/
 	
 // Question 1(a)
 WAIT_FOR_VSYNC:
@@ -95,10 +88,7 @@ CLEAR_SCREEN:
 	// We can finally pop since we are done this subroutine 
 	POP {R0-R3, LR}
 	MOV PC, LR 
-	
-// Question 1(d)
-DRAW_LINE:
-// Confused on this part for now 
+
 	
 
 // Question 1(e)
